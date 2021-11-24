@@ -109,8 +109,8 @@ let store = {
   // Example of a pure function that renders infomation requested from the backend
   const ImageOfTheDay = (apod) => {
     if (!apod ) {
-      getImageOfTheDay(store);
-      console.log(getImageOfTheDay(store));
+      getImageOfTheDay(store,"opportunity");
+     // console.log(getImageOfTheDay(store));
     }
   
     const arr=apod.image.latest_photos;
@@ -131,10 +131,10 @@ let store = {
   // ------------------------------------------------------  API CALLS
   
   // Example API call
-  const getImageOfTheDay = (state) => {
+  const getImageOfTheDay = (state,rovername) => {
     let { apod } = state;
   
-    fetch(`http://localhost:3000/apod`)
+    fetch(`http://localhost:3000/${rovername}`)
       .then((res) => res.json())
       .then((apod) => updateStore(store, { apod } )
       //.then(data) => roverList = data.Dinos.map()
