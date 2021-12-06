@@ -87,7 +87,7 @@ let store = {
     }
   try{
     const rover=apod.image.latest_photos[0].rover;
-    console.log("asma arr is",rover.name)
+    console.log("selected rover name is",rover.name)
     if (rover) {
       return (
               `<section id=${Rname}>
