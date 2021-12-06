@@ -1,7 +1,7 @@
 let store = {
     user: { name: "Asma" },
     apod: "",
-    rovers: ["Curiosity", "Opportunity", "Spirit","Perseverance"],
+    rovers: Immutable.List(["Curiosity", "Opportunity", "Spirit","Perseverance"]),
   };
   
   // add our markup to the page
@@ -13,6 +13,7 @@ let store = {
   };
   
   const render = async (root, state) => {
+    let newDiv=document.createElement('div');
     root.innerHTML = App(state);
   };
   
@@ -24,50 +25,20 @@ let store = {
               <header></header>
               <main>
                   ${Greeting(store.user.name)}
-                  <div class="tab">
-                  ${showMenu(store.rovers)}
-                  </div>
-  
-                  <div id="Curiosity" class="tabcontent">    
-                  <h3>London</h3>
-                  <p>London is the capital city of England.</p>
-                  </div>
-  
-                  <div id="Opportunity" class="tabcontent">
-                  <h3>Paris</h3>
-                  <p>Paris is the capital of France.</p> 
-                  </div>          
-  
-                  <div id="Spirit" class="tabcontent">
-                  <h3>Tokyo</h3>
-                  <p>Tokyo is the capital of Japan.</p>
-                  </div>
-  
-  
-  
-                  <section>
-                      
-                      ${ImageOfTheDay(apod)}
+                  <section id="oppertunity">
+                  ${ImageOfTheDay(apod,'Opportunity')}
                   </section>
+                  <section id="spirit">
+                 ${ImageOfTheDay(apod,'spirit')}
+              </section>
+              <section id="curiosity">
+                 ${ImageOfTheDay(apod,'curiosity')}
+              </section>
               </main>
               <footer></footer>
           `;
   };
-  function openCity(evt, cityName) {
-      var i, tabcontent, tablinks;
-      tabcontent = document.getElementsByClassName("tabcontent");
-      for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-      }
-      tablinks = document.getElementsByClassName("tablinks");
-      for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-      }
-      document.getElementById(cityName).style.display = "block";
-      evt.currentTarget.className += " active";
-    }
-  // Get the element with id="defaultOpen" and click on it
-  //document.getElementById("defaultOpen").addEventListener('click');
+
   // listening for load event because page should load before any JS is called
   window.addEventListener("load", () => {
     render(root, store);
@@ -87,12 +58,6 @@ let store = {
               <h1>Hello!</h1>
           `;
   };
-  //show menu
-  const showMenu=(rovers)=>{
-      return rovers.map(rover=>
-       `<button class="tablinks" onclick="openCity(event, ${rover})" >${rover}</button>`
-      )
-  }
   /* const showRoverInfo=(roverList)=>{
       return roverList.map(element => {
           `
@@ -107,29 +72,43 @@ let store = {
       });
   } */
   // Example of a pure function that renders infomation requested from the backend
-  const ImageOfTheDay = (apod) => {
-    if (!apod ) {
-      getImageOfTheDay(store,"opportunity");
+  const showImagesOfRoverrs= (apod)=>{
+    const rolist=store.rovers;
+   const showri=rolist.map(x=>{
+      return ImageOfTheDay(apod,x)
+    })
+    console.log(showri)
+
+  }
+  const ImageOfTheDay = (apod,Rname) => {
+   if (!apod ) {
+      getImageOfTheDay(store,Rname);
      // console.log(getImageOfTheDay(store));
     }
-  
-    const arr=apod.image.latest_photos;
-    console.log(arr)
-    if (arr) {
-      return arr.map((element)=>
-              `<ul class="information-container">
-              <li>Rover namerrr: ${element.rover.name }</li>
-              <li>Launched from Earth on: ${element.rover.launch_date}</li>
-              <li>Landed on Mars on: ${element.rover.landing_date}</li>
-              <li>Mission status: ${element.rover.status}</li>
-              <li>Photos taken on: ${element.rover.max_date}</li>
+  try{
+    const rover=apod.image.latest_photos[0].rover;
+    console.log("asma arr is",rover.name)
+    if (rover) {
+      return (
+              `<section id=${Rname}>
+              <ul class="information-container">
+              <li>Rover name: ${rover.name }</li>
+              <li>Launched from Earth on: ${rover.launch_date}</li>
+              <li>Landed on Mars on: ${rover.landing_date}</li>
+              <li>Mission status: ${rover.status}</li>
+              <li>Photos taken on: ${rover.max_date}</li>
           </ul>
-              `);
-    } 
+          </section>
+              `)
+    }
   }
-  
+  catch(err) {console.log("there is error with",Rname, err)}
+  }
+ 
   // ------------------------------------------------------  API CALLS
-  
+  //-------------------------------------------------custom function
+
+  //-------------------------------------------------
   // Example API call
   const getImageOfTheDay = (state,rovername) => {
     let { apod } = state;
