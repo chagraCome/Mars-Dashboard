@@ -1,7 +1,11 @@
 let store = {
     user: { name: "Asma" },
     apod: "",
-    rovers: Immutable.List(["Curiosity", "Opportunity", "Spirit","Perseverance"]),
+    curiosity: '',
+    opportunity: '',
+    spirit: '',
+    perseverance:'',
+    rovers: ["curiosity", "opportunity", "spirit","perseverance"],
   };
   
   // add our markup to the page
@@ -25,14 +29,15 @@ let store = {
               <header></header>
               <main>
                   ${Greeting(store.user.name)}
+                  ${showRover(store)}
                   <section id="oppertunity">
-                  ${ImageOfTheDay(apod,'Opportunity')}
+                  {ImageOfTheDay(apod,'Opportunity')}
                   </section>
                   <section id="spirit">
-                 ${ImageOfTheDay(apod,'spirit')}
+                 {ImageOfTheDay(apod,'spirit')}
               </section>
               <section id="curiosity">
-                 ${ImageOfTheDay(apod,'curiosity')}
+                 {ImageOfTheDay(apod,'curiosity')}
               </section>
               </main>
               <footer></footer>
@@ -42,6 +47,7 @@ let store = {
   // listening for load event because page should load before any JS is called
   window.addEventListener("load", () => {
     render(root, store);
+    callRoverApis();
   });
   
   // ------------------------------------------------------  COMPONENTS
@@ -72,6 +78,44 @@ let store = {
       });
   } */
   // Example of a pure function that renders infomation requested from the backend
+ const callRoverApis= ()=>{
+  store.rovers.map(rover=> getImageOfTheDay(rover)) ;
+  console.log(store.spirit)
+ 
+ }
+ const getRoverPhotos=(rover)=> {
+ return rover.map(photo=> 
+  `<img src=${photo.img_src} width="50" width="50"/>`)
+ }
+ const showRover= (store)=>{
+   console.log("they have data",store.opportunity)
+   if(store.spirit && store.opportunity && store.curiosity){
+    return store.rovers.map(roverInf=>{
+      let state= store[roverInf]
+      console.log("state is",state);
+      let name=state[0].rover.name;
+      let landing_date=state[0].rover.landing_date;
+      let launch_date=state[0].rover.launch_date;
+      let status=state[0].rover.status;
+      let max_date=state[0].rover.max_date;
+    return (
+      `<section id=${roverInf}>
+      <ul class="information-container">
+      <li>Rover name: ${name }</li>
+      <li>Launched from Earth on: ${launch_date}</li>
+      <li>Landed on Mars on: ${landing_date}</li>
+      <li>Mission status: ${status}</li>
+      <li>Photos taken on: ${getRoverPhotos(state)}</li>
+  </ul>
+  </section>
+      `)});
+   }
+   else{
+     return `<p> please refresh page</p>`
+   }
+ 
+ }
+ 
   const showImagesOfRoverrs= (apod)=>{
     const rolist=store.rovers;
    const showri=rolist.map(x=>{
@@ -110,15 +154,19 @@ let store = {
 
   //-------------------------------------------------
   // Example API call
-  const getImageOfTheDay = (state,rovername) => {
-    let { apod } = state;
+  const getImageOfTheDay = (rovername) => {
+    //let { apod } = state;
   
     fetch(`http://localhost:3000/${rovername}`)
       .then((res) => res.json())
-      .then((apod) => updateStore(store, { apod } )
+      .then((response) => {
+        const newState=response.image.latest_photos;
+        store[rovername]= newState;
+console.log("selected called api",rovername,response)
+         updateStore(store, newState)
       //.then(data) => roverList = data.Dinos.map()
-      );
-  console.log(apod)
+  });
+  console.log(store)
     //return data;
   };
   
