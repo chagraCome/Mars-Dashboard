@@ -26,11 +26,17 @@ let store = {
     let { rovers, apod } = state;
   
     return `
-              <header></header>
+              <header>
               ${showNavBar()}
+              </header>
+            
               <main>
+                  
+                  <section id="Home" class="tabNav" style="display:block">
                   ${Greeting(store.user.name)}
-
+                  <h3>Home</h3>
+                  <p>Home is where the heart is..</p>
+                </section>
                   ${showRover(store)}
               </main>
               <footer></footer>
@@ -44,7 +50,18 @@ let store = {
   });
   
   // ------------------------------------------------------  COMPONENTS
-  
+  function openPage(pageName,elmnt) {
+    var tabNav = document.getElementsByClassName("tabNav");
+    for (let i = 0; i < tabNav.length; i++) {
+      tabNav[i].style.display = "none";
+    }
+    var tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].style.backgroundColor = "";
+    }
+    document.getElementById(pageName).style.display = "block";
+    elmnt.style.backgroundColor = "#e4c8c8";
+  }
   // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
   const Greeting = (name) => {
     if (name) {
@@ -60,9 +77,12 @@ let store = {
   //nav
   const showMenu=()=>{
 return store.rovers.map(rover =>
-  `  <ul class="nav-menu">
+  `<button class="tablink" onclick="openPage('${rover}', this)">
+  ${rover}</button>`
+  /*`  <ul class="nav-menu">
 <li><a href="#${rover}" class="nav-links">${rover}</a></li>
-</ul>`)
+</ul>`*/
+).join('');
   }
   const showNavBar=()=>{
     return  `<div class="nav-container">
@@ -73,6 +93,8 @@ return store.rovers.map(rover =>
           <span class="bar"></span>
           <span class="bar"></span>
         </div>
+        <button class="tablink" onclick="openPage('Home', this)">
+        Home</button>
     ${showMenu()}
       </nav>
     </div>`
@@ -99,16 +121,17 @@ return store.rovers.map(rover =>
       let status=state[0].rover.status;
       let max_date=state[0].rover.max_date;
     return (
-      `<section id=${roverInf}>
+      `<section id=${roverInf} class="tabNav" style="display:none">
       <ul class="information-container">
       <li>Rover name: ${name }</li>
       <li>Launched from Earth on: ${launch_date}</li>
       <li>Landed on Mars on: ${landing_date}</li>
       <li>Mission status: ${status}</li>
-      <li>Photos taken on: ${getRoverPhotos(state)}</li>
+      <li>Photos taken on:</li>
+      ${getRoverPhotos(state)}
   </ul>
   </section>
-      `)});
+      `)}).join('');
    }
    else{
      return `<p> please refresh page</p>`
