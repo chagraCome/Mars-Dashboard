@@ -27,18 +27,11 @@ let store = {
   
     return `
               <header></header>
+              ${showNavBar()}
               <main>
                   ${Greeting(store.user.name)}
+
                   ${showRover(store)}
-                  <section id="oppertunity">
-                  {ImageOfTheDay(apod,'Opportunity')}
-                  </section>
-                  <section id="spirit">
-                 {ImageOfTheDay(apod,'spirit')}
-              </section>
-              <section id="curiosity">
-                 {ImageOfTheDay(apod,'curiosity')}
-              </section>
               </main>
               <footer></footer>
           `;
@@ -64,19 +57,26 @@ let store = {
               <h1>Hello!</h1>
           `;
   };
-  /* const showRoverInfo=(roverList)=>{
-      return roverList.map(element => {
-          `
-              <ul class="information-container">
-              <li>Rover name: ${element.name }</li>
-              <li>Launched from Earth on: ${element.launch_date}</li>
-              <li>Landed on Mars on: ${element.landing_date}</li>
-              <li>Mission status: ${element.status}</li>
-              <li>Photos taken on: ${element.max_date}</li>
-          </ul>
-              `
-      });
-  } */
+  //nav
+  const showMenu=()=>{
+return store.rovers.map(rover =>
+  `  <ul class="nav-menu">
+<li><a href="#${rover}" class="nav-links">${rover}</a></li>
+</ul>`)
+  }
+  const showNavBar=()=>{
+    return  `<div class="nav-container">
+      <nav class="navbar">
+        <h1 id="navbar-logo"> Asma dashboards</h1>
+        <div class="menu-toggle" id="mobile-menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+    ${showMenu()}
+      </nav>
+    </div>`
+    }
   // Example of a pure function that renders infomation requested from the backend
  const callRoverApis= ()=>{
   store.rovers.map(rover=> getImageOfTheDay(rover)) ;
@@ -85,7 +85,7 @@ let store = {
  }
  const getRoverPhotos=(rover)=> {
  return rover.map(photo=> 
-  `<img src=${photo.img_src} width="50" width="50"/>`)
+  `<img src=${photo.img_src} width="150" width="150"/>`)
  }
  const showRover= (store)=>{
    console.log("they have data",store.opportunity)
@@ -154,19 +154,15 @@ let store = {
 
   //-------------------------------------------------
   // Example API call
-  const getImageOfTheDay = (rovername) => {
-    //let { apod } = state;
-  
+  const getImageOfTheDay = (rovername) => { 
     fetch(`http://localhost:3000/${rovername}`)
       .then((res) => res.json())
       .then((response) => {
         const newState=response.image.latest_photos;
         store[rovername]= newState;
-console.log("selected called api",rovername,response)
+    console.log("selected called api",rovername,response)
          updateStore(store, newState)
-      //.then(data) => roverList = data.Dinos.map()
   });
   console.log(store)
-    //return data;
   };
   
