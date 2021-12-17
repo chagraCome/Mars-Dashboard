@@ -1,5 +1,5 @@
 let store = {
-    user: { name: "Asma" },
+    user: Immutable.Map({ name: "Astronaut" }),
     apod: "",
     curiosity: '',
     opportunity: '',
@@ -32,10 +32,10 @@ let store = {
             
               <main>
                   
-                  <section id="Home" class="tabNav" style="display:block">
-                  ${Greeting(store.user.name)}
-                  <h3>Home</h3>
-                  <p>Home is where the heart is..</p>
+                  <section id="Home" class="tabNav " style="display:block">
+                  ${Greeting()}
+                  <h3>Welcome</h3>
+                  <p>here is all informations you need for your next jorney to Mars</p>
                 </section>
                   ${showRover(store)}
               </main>
@@ -63,15 +63,10 @@ let store = {
     elmnt.style.backgroundColor = "#e4c8c8";
   }
   // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
-  const Greeting = (name) => {
-    if (name) {
-      return `
-                  <h1>Welcome, ${name}!</h1>
-              `;
-    }
+  const Greeting = () => {
   
     return `
-              <h1>Hello!</h1>
+              <h1>Hello!  ${store.user.get('name')}</h1>
           `;
   };
   //nav
@@ -87,12 +82,7 @@ return store.rovers.map(rover =>
   const showNavBar=()=>{
     return  `<div class="nav-container">
       <nav class="navbar">
-        <h1 id="navbar-logo"> Asma dashboards</h1>
-        <div class="menu-toggle" id="mobile-menu">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </div>
+        <h1 id="navbar-logo"> Mars Rovers dashboards</h1>
         <button class="tablink" onclick="openPage('Home', this)">
         Home</button>
     ${showMenu()}
@@ -102,7 +92,7 @@ return store.rovers.map(rover =>
   // Example of a pure function that renders infomation requested from the backend
  const callRoverApis= ()=>{
   store.rovers.map(rover=> getImageOfTheDay(rover)) ;
-  console.log(store.spirit)
+  //console.log(store.spirit)
  
  }
  const getRoverPhotos=(rover)=> {
@@ -110,26 +100,28 @@ return store.rovers.map(rover =>
   `<img src=${photo.img_src} width="150" width="150"/>`)
  }
  const showRover= (store)=>{
-   console.log("they have data",store.opportunity)
+   //console.log("they have data",store.opportunity)
    if(store.spirit && store.opportunity && store.curiosity){
     return store.rovers.map(roverInf=>{
       let state= store[roverInf]
-      console.log("state is",state);
+      //console.log("state is",state);
       let name=state[0].rover.name;
       let landing_date=state[0].rover.landing_date;
       let launch_date=state[0].rover.launch_date;
       let status=state[0].rover.status;
-      let max_date=state[0].rover.max_date;
+      let max_date=state[0].earth_date;
     return (
       `<section id=${roverInf} class="tabNav" style="display:none">
+      <h2>${name }</h2>
       <ul class="information-container">
       <li>Rover name: ${name }</li>
       <li>Launched from Earth on: ${launch_date}</li>
       <li>Landed on Mars on: ${landing_date}</li>
       <li>Mission status: ${status}</li>
-      <li>Photos taken on:</li>
-      ${getRoverPhotos(state)}
+      <li> Date the most recent photos were taken: ${max_date}</li>
   </ul>
+<h3> last photos taken in</h3>
+  ${getRoverPhotos(state)}
   </section>
       `)}).join('');
    }
@@ -144,7 +136,7 @@ return store.rovers.map(rover =>
    const showri=rolist.map(x=>{
       return ImageOfTheDay(apod,x)
     })
-    console.log(showri)
+    //console.log(showri)
 
   }
   const ImageOfTheDay = (apod,Rname) => {
@@ -183,9 +175,9 @@ return store.rovers.map(rover =>
       .then((response) => {
         const newState=response.image.latest_photos;
         store[rovername]= newState;
-    console.log("selected called api",rovername,response)
+    //console.log("selected called api",rovername,response)
          updateStore(store, newState)
   });
-  console.log(store)
+  //console.log(store)
   };
   

@@ -58,3 +58,9 @@ footer {
   padding: 100px 20px;
   height: 100%;
 }
+
+@media (max-width: 768px) {
+  .tablink {
+    width: 100%;
+  }
+}
