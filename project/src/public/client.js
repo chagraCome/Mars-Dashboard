@@ -99,13 +99,14 @@ let store = {
    //console.log("they have data",store.opportunity)
    if(store.spirit && store.opportunity && store.curiosity){
     return store.rovers.map(roverInf=>{
-      let state= store[roverInf]
+      const stateMain= store[roverInf];
+      const state=stateMain[0];
       //console.log("state is",state);
-      let name=state[0].rover.name;
-      let landing_date=state[0].rover.landing_date;
-      let launch_date=state[0].rover.launch_date;
-      let status=state[0].rover.status;
-      let max_date=state[0].earth_date;
+      const name=state.rover.name;
+      const landing_date=state.rover.landing_date;
+      const launch_date=state.rover.launch_date;
+      const status=state.rover.status;
+      const max_date=state.earth_date;
     return (
       `<section id=${roverInf} class="tabNav" style="display:none">
       <h2>${name }</h2>
@@ -117,7 +118,7 @@ let store = {
       <li> Date the most recent photos were taken: ${max_date}</li>
   </ul>
 <h3> last photos taken in</h3>
-  ${getRoverPhotos(state)}
+  ${getRoverPhotos(stateMain)}
   </section>
       `)}).join('');
    }
