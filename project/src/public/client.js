@@ -17,8 +17,8 @@ let store = {
   };
   
   const render = async (root, state) => {
-    let newDiv=document.createElement('div');
     root.innerHTML = App(state);
+
   };
   
   // create content
@@ -27,15 +27,15 @@ let store = {
   
     return `
               <header>
-              ${showNavBar()}
+              ${showNavBar(showMenu)}
               </header>
             
               <main>
-                  
                   <section id="Home" class="tabNav " style="display:block">
                   ${Greeting()}
                   <h3>Welcome</h3>
-                  <p>here is all informations you need for your next jorney to Mars</p>
+                  <p>here is all informations you need for your next journey to Mars</p>
+                  we have 4 famous rovers
                 </section>
                   ${showRover(store)}
               </main>
@@ -46,7 +46,7 @@ let store = {
   // listening for load event because page should load before any JS is called
   window.addEventListener("load", () => {
     render(root, store);
-    callRoverApis();
+    callRoverApis(getImageOfTheDay);
   });
   
   // ------------------------------------------------------  COMPONENTS
@@ -71,27 +71,23 @@ let store = {
   };
   //nav
   const showMenu=()=>{
-return store.rovers.map(rover =>
-  `<button class="tablink" onclick="openPage('${rover}', this)">
-  ${rover}</button>`
-  /*`  <ul class="nav-menu">
-<li><a href="#${rover}" class="nav-links">${rover}</a></li>
-</ul>`*/
-).join('');
+  return store.rovers.map(rover =>
+    `<button class="tablink" onclick="openPage('${rover}', this)">
+    ${rover}</button>`).join('');
   }
-  const showNavBar=()=>{
+  const showNavBar=(fn)=>{
     return  `<div class="nav-container">
       <nav class="navbar">
         <h1 id="navbar-logo"> Mars Rovers dashboards</h1>
-        <button class="tablink" onclick="openPage('Home', this)">
+        <button class="tablink" onclick="openPage('Home', this)" id="defaultOpen">
         Home</button>
-    ${showMenu()}
+    ${fn()}
       </nav>
     </div>`
     }
   // Example of a pure function that renders infomation requested from the backend
- const callRoverApis= ()=>{
-  store.rovers.map(rover=> getImageOfTheDay(rover)) ;
+ const callRoverApis= (callApiFn)=>{
+  store.rovers.map(rover=> callApiFn(rover)) ;
   //console.log(store.spirit)
  
  }
@@ -126,50 +122,18 @@ return store.rovers.map(rover =>
       `)}).join('');
    }
    else{
-     return `<p> please refresh page</p>`
+     return `<p> it is coming</p>`
    }
  
  }
- 
-  const showImagesOfRoverrs= (apod)=>{
-    const rolist=store.rovers;
-   const showri=rolist.map(x=>{
-      return ImageOfTheDay(apod,x)
-    })
-    //console.log(showri)
 
-  }
-  const ImageOfTheDay = (apod,Rname) => {
-   if (!apod ) {
-      getImageOfTheDay(store,Rname);
-     // console.log(getImageOfTheDay(store));
-    }
-  try{
-    const rover=apod.image.latest_photos[0].rover;
-    console.log("selected rover name is",rover.name)
-    if (rover) {
-      return (
-              `<section id=${Rname}>
-              <ul class="information-container">
-              <li>Rover name: ${rover.name }</li>
-              <li>Launched from Earth on: ${rover.launch_date}</li>
-              <li>Landed on Mars on: ${rover.landing_date}</li>
-              <li>Mission status: ${rover.status}</li>
-              <li>Photos taken on: ${rover.max_date}</li>
-          </ul>
-          </section>
-              `)
-    }
-  }
-  catch(err) {console.log("there is error with",Rname, err)}
-  }
- 
   // ------------------------------------------------------  API CALLS
   //-------------------------------------------------custom function
 
   //-------------------------------------------------
   // Example API call
   const getImageOfTheDay = (rovername) => { 
+    try{
     fetch(`http://localhost:3000/${rovername}`)
       .then((res) => res.json())
       .then((response) => {
@@ -178,6 +142,9 @@ return store.rovers.map(rover =>
     //console.log("selected called api",rovername,response)
          updateStore(store, newState)
   });
-  //console.log(store)
+}
+catch(error){
+  console.log("error calling Api with rover name,",rovername,error)
+}
   };
   
