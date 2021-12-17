@@ -13,7 +13,17 @@ We have supplied some of the foundational code for you. So follow these steps to
 ```yarn install``` 
 
 
+### OUTPUT
 
+![image](https://user-images.githubusercontent.com/18313675/146608593-b36e17c4-fc4a-455a-ac30-717f980756fe.png)
+
+![image](https://user-images.githubusercontent.com/18313675/146608650-29f8a5e5-b4f4-49ec-8fc8-127c1f1bc595.png)
+
+
+![image](https://user-images.githubusercontent.com/18313675/146608702-2e8f113e-88bd-493b-93ac-6c2a1c2c4660.png)
+
+
+![image](https://user-images.githubusercontent.com/18313675/146608800-2b4590e1-b42b-4296-b50f-22a9897e3b00.png)
 
 
 
