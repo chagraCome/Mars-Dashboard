@@ -75,6 +75,7 @@ let store = {
     `<button class="tablink" onclick="openPage('${rover}', this)">
     ${rover}</button>`).join('');
   }
+  // High Order function that render the navigation bar
   const showNavBar=(fn)=>{
     return  `<div class="nav-container">
       <nav class="navbar">
@@ -85,7 +86,7 @@ let store = {
       </nav>
     </div>`
     }
-  // Example of a pure function that renders infomation requested from the backend
+  // High Order function that renders infomation requested from the backend
  const callRoverApis= (callApiFn)=>{
   store.rovers.map(rover=> callApiFn(rover)) ;
   //console.log(store.spirit)
@@ -93,8 +94,9 @@ let store = {
  }
  const getRoverPhotos=(rover)=> {
  return rover.map(photo=> 
-  `<img src=${photo.img_src} width="150" width="150"/>`)
+  `<img src=${photo.img_src} width="150" hieght="150" class="roverimg"/>`).join('');
  }
+ // hight ordred function
  const showRover= (store)=>{
    //console.log("they have data",store.opportunity)
    if(store.spirit && store.opportunity && store.curiosity){
@@ -102,32 +104,38 @@ let store = {
       const stateMain= store[roverInf];
       const state=stateMain[0];
       //console.log("state is",state);
-      const name=state.rover.name;
-      const landing_date=state.rover.landing_date;
-      const launch_date=state.rover.launch_date;
-      const status=state.rover.status;
-      const max_date=state.earth_date;
-    return (
-      `<section id=${roverInf} class="tabNav" style="display:none">
-      <h2>${name }</h2>
-      <ul class="information-container">
-      <li>Rover name: ${name }</li>
-      <li>Launched from Earth on: ${launch_date}</li>
-      <li>Landed on Mars on: ${landing_date}</li>
-      <li>Mission status: ${status}</li>
-      <li> Date the most recent photos were taken: ${max_date}</li>
-  </ul>
-<h3> last photos taken in</h3>
-  ${getRoverPhotos(stateMain)}
-  </section>
-      `)}).join('');
+     return RenderRovorInfo(stateMain,state,roverInf);
+    }).join('');
    }
    else{
-     return `<p> it is coming</p>`
+     return RoverInfoWait()
    }
  
  }
-
+ const RoverInfoWait=()=>{
+  return `<p> it is coming</p>`
+ }
+const RenderRovorInfo=(stateMain,state,roverInf)=>{
+  const name=state.rover.name;
+  const landing_date=state.rover.landing_date;
+  const launch_date=state.rover.launch_date;
+  const status=state.rover.status;
+  const max_date=state.earth_date;
+return (
+  `<section id=${roverInf} class="tabNav" style="display:none">
+  <h2>${name }</h2>
+  <ul class="information-container">
+  <li>Rover name: ${name }</li>
+  <li>Launched from Earth on: ${launch_date}</li>
+  <li>Landed on Mars on: ${landing_date}</li>
+  <li>Mission status: ${status}</li>
+  <li> Date the most recent photos were taken: ${max_date}</li>
+</ul>
+<h3> last photos taken in</h3>
+${getRoverPhotos(stateMain)}
+</section>
+  `)
+}
   // ------------------------------------------------------  API CALLS
   //-------------------------------------------------custom function
 

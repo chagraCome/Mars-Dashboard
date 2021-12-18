@@ -58,9 +58,19 @@ footer {
   padding: 100px 20px;
   height: 100%;
 }
-
+.roverimg{
+  padding: 15px;
+  width: 20%;}
 @media (max-width: 768px) {
   .tablink {
     width: 100%;
+  }
+  .roverimg{
+    width: 50%;
+  }
+}
+@media (max-width: 375px){
+  .roverimg{
+    width: 100% !important;
   }
 }
