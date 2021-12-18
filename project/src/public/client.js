@@ -98,43 +98,42 @@ let store = {
  }
  // hight ordred function
  const showRover= (store)=>{
-   //console.log("they have data",store.opportunity)
    if(store.spirit && store.opportunity && store.curiosity){
-    return store.rovers.map(roverInf=>{
-      const stateMain= store[roverInf];
-      const state=stateMain[0];
-      //console.log("state is",state);
-     return RenderRovorInfo(stateMain,state,roverInf);
-    }).join('');
+     return RenderRovorInfo();
    }
    else{
      return RoverInfoWait()
    }
- 
  }
+
  const RoverInfoWait=()=>{
   return `<p> it is coming</p>`
  }
-const RenderRovorInfo=(stateMain,state,roverInf)=>{
-  const name=state.rover.name;
-  const landing_date=state.rover.landing_date;
-  const launch_date=state.rover.launch_date;
-  const status=state.rover.status;
-  const max_date=state.earth_date;
-return (
-  `<section id=${roverInf} class="tabNav" style="display:none">
-  <h2>${name }</h2>
-  <ul class="information-container">
-  <li>Rover name: ${name }</li>
-  <li>Launched from Earth on: ${launch_date}</li>
-  <li>Landed on Mars on: ${landing_date}</li>
-  <li>Mission status: ${status}</li>
-  <li> Date the most recent photos were taken: ${max_date}</li>
-</ul>
-<h3> last photos taken in</h3>
-${getRoverPhotos(stateMain)}
-</section>
-  `)
+
+const RenderRovorInfo=()=>{
+  return store.rovers.map(roverInf=>{
+    const stateMain= store[roverInf];
+    const state=stateMain[0];
+    const rovInf=state.rover;
+    const namer=rovInf.name;
+    const landing_date=rovInf.landing_date;
+    const launch_date=rovInf.launch_date;
+    const status=rovInf.status;
+    const max_date=state.earth_date;
+  return (
+    `<section id=${roverInf} class="tabNav" style="display:none">
+    <h2>${namer }</h2>
+    <ul class="information-container">
+    <li>Rover name: ${namer }</li>
+    <li>Launched from Earth on: ${launch_date}</li>
+    <li>Landed on Mars on: ${landing_date}</li>
+    <li>Mission status: ${status}</li>
+    <li> Date the most recent photos were taken: ${max_date}</li>
+  </ul>
+  <h3> last photos taken in</h3>
+  ${getRoverPhotos(stateMain)}
+  </section>
+    `)   }).join('');
 }
   // ------------------------------------------------------  API CALLS
   //-------------------------------------------------custom function
