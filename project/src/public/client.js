@@ -62,14 +62,14 @@ let store = {
     document.getElementById(pageName).style.display = "block";
     elmnt.style.backgroundColor = "#e4c8c8";
   }
-  // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
+
   const Greeting = () => {
   
     return `
               <h1>Hello!  ${store.user.get('name')}</h1>
           `;
   };
-  //nav
+  //show menu 
   const showMenu=()=>{
   return store.rovers.map(rover =>
     `<button class="tablink" onclick="openPage('${rover}', this)">
@@ -96,7 +96,7 @@ let store = {
  return rover.map(photo=> 
   `<img src=${photo.img_src} width="150" hieght="150" class="roverimg"/>`).join('');
  }
- // hight ordred function
+ // high order function
  const showRover= (store)=>{
    if(store.spirit && store.opportunity && store.curiosity){
      return RenderRovorInfo();
